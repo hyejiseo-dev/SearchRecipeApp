@@ -15,12 +15,24 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
+import androidx.fragment.app.viewModels
 import androidx.navigation.findNavController
 import com.hjseo.recipeapp.R
 import dagger.hilt.android.AndroidEntryPoint
+import javax.inject.Inject
 
 @AndroidEntryPoint
 class RecipeListFragment : Fragment() {
+
+    val viewModel: RecipeListViewModel by viewModels()
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        println("VIEWMODEL : ${viewModel.getToken()}")
+        println("VIEWMODEL : ${viewModel.getRandom()}")
+        println("VIEWMODEL : ${viewModel.getRepo()}")
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater,
