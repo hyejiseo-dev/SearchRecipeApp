@@ -36,6 +36,4 @@ data class RecipeDto(
 
     @SerializedName("date_updated")
     var date_updated: String? = null,
-    ) {
-
-}
+    )
