@@ -6,9 +6,11 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.compose.foundation.horizontalScroll
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
@@ -46,6 +48,7 @@ import androidx.fragment.app.viewModels
 import androidx.navigation.findNavController
 import com.hjseo.recipeapp.R
 import com.hjseo.recipeapp.domain.util.TAG
+import com.hjseo.recipeapp.presentation.components.CircularProgressBar
 import com.hjseo.recipeapp.presentation.components.FoodCategoryChip
 import com.hjseo.recipeapp.presentation.components.RecipeCard
 import com.hjseo.recipeapp.presentation.components.SearchAppBar
@@ -74,6 +77,8 @@ class RecipeListFragment : Fragment() {
 
                 val selectedCategory = viewModel.selectedCategory.value
 
+                val loading = viewModel.loading.value
+
                 Column() {
                     SearchAppBar(
                         query = query,
@@ -83,13 +88,18 @@ class RecipeListFragment : Fragment() {
                         onSelectedCategoryChanged = viewModel::onSelectedCategoryChanged,
                     )
 
-                    LazyColumn {
-                        itemsIndexed(
-                            items = recipes
-                        ) { index, recipe ->
-                            RecipeCard(recipe = recipe, onClick = {})
+                    Box(modifier = Modifier.fillMaxSize()){
+                        LazyColumn {
+                            itemsIndexed(
+                                items = recipes
+                            ) { index, recipe ->
+                                RecipeCard(recipe = recipe, onClick = {})
+                            }
                         }
+                        // 오버레이 되어 표시됨
+                        CircularProgressBar(isDisplay = loading)
                     }
+
                 }
             }
         }

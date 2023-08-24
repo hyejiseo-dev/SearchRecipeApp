@@ -10,6 +10,7 @@ import com.hjseo.recipeapp.domain.model.Recipe
 import com.hjseo.recipeapp.network.model.RecipeDtoMapper
 import com.hjseo.recipeapp.repository.RecipeRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import retrofit2.http.Query
 import javax.inject.Inject
@@ -27,21 +28,35 @@ constructor(
     val query = mutableStateOf("")
     val selectedCategory: MutableState<FoodCategory?> = mutableStateOf(null)
     var categoryScrollPosition: Float = 0f
+    val loading = mutableStateOf(true)
     init {
         newSearch()
     }
 
     fun newSearch(){
         viewModelScope.launch {
+            loading.value = true
+            resetSearchState()  // clear data
+            delay(2000)
             val result = repository.search(
                 token = token,
                 page = 1,
                 query = query.value
             )
             recipes.value = result
+            loading.value = false
         }
     }
 
+    private fun resetSearchState(){
+        recipes.value = listOf()
+        if(selectedCategory.value?.value != query.value)
+            clearSelectedCategory()
+    }
+
+    private fun clearSelectedCategory(){
+        selectedCategory.value = null
+    }
     fun onQueryChanged(query: String){
         this.query.value = query
     }
