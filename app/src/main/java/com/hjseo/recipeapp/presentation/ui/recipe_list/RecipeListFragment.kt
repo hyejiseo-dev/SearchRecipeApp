@@ -48,6 +48,7 @@ import com.hjseo.recipeapp.R
 import com.hjseo.recipeapp.domain.util.TAG
 import com.hjseo.recipeapp.presentation.components.FoodCategoryChip
 import com.hjseo.recipeapp.presentation.components.RecipeCard
+import com.hjseo.recipeapp.presentation.components.SearchAppBar
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
@@ -74,64 +75,13 @@ class RecipeListFragment : Fragment() {
                 val selectedCategory = viewModel.selectedCategory.value
 
                 Column() {
-                    Surface(
-                        modifier = Modifier.fillMaxWidth(),
-                        color = Color.White,
-                    ) {
-                        Column() {
-                            Row(modifier = Modifier.fillMaxWidth()) {
-                                TextField(
-                                    modifier = Modifier
-                                        .fillMaxWidth(0.9f)
-                                        .padding(8.dp),
-                                    value = query,
-                                    onValueChange = { newVal ->
-                                        viewModel.onQueryChanged(newVal)
-                                    },
-                                    label = {
-                                        Text(text = "Search")
-                                    },
-                                    keyboardOptions = KeyboardOptions(
-                                        keyboardType = KeyboardType.Text,
-                                        imeAction = ImeAction.Search
-                                    ),
-                                    keyboardActions = KeyboardActions(
-                                        onSearch = {
-                                            viewModel.newSearch()
-                                            keyboardController?.hide()
-                                        }
-                                    ),
-                                    leadingIcon = {
-                                        Icon(
-                                            imageVector = Icons.Filled.Search,
-                                            contentDescription = ""
-                                        )
-                                    },
-//                                textStyle = TextStyle(color = Color.Black),
-//                                backgroundcolor = Color.White,
-                                )
-                            }
-
-                            Row(
-                                modifier = Modifier.horizontalScroll(rememberScrollState())
-                                    .fillMaxWidth().padding(4.dp)
-                            ) {
-                                for (category in getAllFoodCategories()) {
-                                    FoodCategoryChip(
-                                        category = category.value,
-                                        isSelected = selectedCategory == category,
-                                        onSelectedCategoryChanged = {
-                                                       viewModel.onSelectedCategoryChanged(it)
-                                        },
-                                        onExecuteSearch = viewModel::newSearch
-                                    )
-                                }
-                            }
-                        }
-
-                    }
-
-
+                    SearchAppBar(
+                        query = query,
+                        onQueryChanged = viewModel::onQueryChanged,
+                        onExecuteSearch = viewModel::newSearch,
+                        selectedCategory = selectedCategory,
+                        onSelectedCategoryChanged = viewModel::onSelectedCategoryChanged,
+                    )
 
                     LazyColumn {
                         itemsIndexed(
